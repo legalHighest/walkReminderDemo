@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">WalkTips</string>
+    <string name="hmd_kids_api_demo">HMD Kids API demo</string>
+    <string name="arrow">Arrow</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="turn_on">Turn on </string>
+    <string name="turn_off">Turn off </string>
+    <string name="disable_factory_reset">Disable Factory Reset</string>
+    <string name="disable_timezone">Disable Timezone</string>
+    <string name="disable_vpn">Disable VPN</string>
+    <string name="disable_date_and_time">Disable Date and time</string>
+    <string name="do_factory_reset">Factory Reset</string>
+    <string name="register_listener">Register Listener</string>
+    <string name="unregister_listener">Unregister Listener</string>
+    <string name="instruction_bypass_accessibility">When your child is walking with his or her head down and playing with his or her phone, he or she will be reminded not to look down and play with his or her phone
+    </string>
+    <string name="instruction_bypass_factory_reset">Option for the parent to allow their kid to access Factory Reset option.\n\n
+        1. Toggle the switch <b>ON</b> to hide the \"Reset options\" menu in Settings.\n
+        2. Go to Settings to confirm that the \"Reset options\" menu is hidden.\n
+        3. Toggle the switch <b>OFF</b> to show the \"Reset options\" menu.\n
+        4. Return to Settings to verify that the \"Reset options\" is now visible.
+    </string>
+    <string name="instruction_bypass_timezone">Option for the parent to allow their kid to access Device Time Zones.\n\n
+        1. Toggle the switch <b>ON</b> to hide the Time zone menu in Settings.\n
+        2. Go to Settings to confirm that the Time zone menu is hidden.\n
+        3. Toggle the switch <b>OFF</b> to show the Time zone menu.\n
+        4. Return to Settings to verify that the Time zone menu is now visible.
+    </string>
+    <string name="instruction_general_setting">Option for the parent to allow their kid to access below options.\n\n
+        1. Toggle the switch <b>ON</b> for each menu option to hide it from the Settings.\n
+        2. Go to Settings to confirm that the selected menu options are hidden.\n
+        3. Toggle the switch <b>OFF</b> for each menu option to make it visible again.\n
+        4. Return to Settings to verify that the selected menu options are now visible.\n
+    </string>
+    <string name="instruction_security_factory_reset">To follow Google find your phone setup to allow Adult to RFS or erase things in lost phone.\n\n
+        ⚠️ <b>All data will be deleted by the factory reset!</b>
+    </string>
+    <string name="instruction_location_share">Notification when the child requests to share their location with a specific app or contact.\n\n
+        1. Click the <b>Register Listener</b> button.\n
+        2. The system starts monitoring applications\' access to device location services. A notification will appear, displaying the name of the app accessing the location.\n
+        3. Click the <b>Unregister Listener</b> button.\n
+        4. No further notifications will be received regarding location access.\n
+    </string>
+    <string name="control_app_install">Control App Install</string>
+    <string name="instruction_app_install_request">App Install Request: Request permission to install a specific app that might be blocked by parental controls.\n\n
+        1. Turn on the switch to enable.\n
+        2. Test various methods of installing apps, including installation from the Play Store, from the file manager, and using adb install.\n
+        3. You will receive a notification when kids want to install this app.\n
+        4. After clicking the allow button on the notification, verify and reinstall the app successfully.\n
+        5. Turn off the switch to disable.\n\n
+        <b>Note:</b> This will not affect the update of existing apps.\n
+    </string>
+    <string name="disable_app_uninstall">Disable App Uninstall</string>
+    <string name="instruction_bypass_app_uninstall">Option for the parent to allow their kid to uninstall apps.\n\n
+    1. Toggle the switch <b>ON</b> to disable the app uninstall feature.\n
+    2. Go to Settings to confirm that the app uninstall feature is disabled.\n
+    3. Toggle the switch <b>OFF</b> to enable the app uninstall feature.\n
+    4. Return to Settings to verify that the app uninstall feature is now available.</string>
+    <string name="requires_notification_permissions">This app requires notification permissions to function properly. Please go to the settings to enable the permission manually.</string>
+</resources>
