@@ -32,7 +32,9 @@
             android:exported="true"></service>
         <activity
             android:name=".WalkReminderActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

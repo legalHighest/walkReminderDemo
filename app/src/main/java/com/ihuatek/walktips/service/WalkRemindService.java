@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import com.ihuatek.walktips.R;
+
 import java.security.PublicKey;
 
 public class WalkRemindService extends Service implements SensorEventListener {
@@ -42,26 +44,26 @@ public class WalkRemindService extends Service implements SensorEventListener {
     private Sensor magnetometer;
     private Handler handler;
 
-    //　步数相关
-    private int stepCount = 0;   // 步数
-    private Runnable noMovementRunnable; //停止移动线程
-    private static final long NO_MOVEMENT_THRESHOLD_MS = 3000; // 3秒
+    //　Associated with the number of steps
+    private int stepCount = 0;   // Step count
+    private Runnable noMovementRunnable; //Stop moving threads
+    private static final long NO_MOVEMENT_THRESHOLD_MS = 3000; // 3s
 
-    //　手机方向相关
+    //　Related to phone orientation
     private final int limitStepCount = 30;
-    private float[] gravity = new float[3]; //　重力
+    private float[] gravity = new float[3]; //　gravity
     private float[] geomagnetic = new float[3];
     private float[] accelData = new float[3];
-    private static final float PITCH_THRESHOLD = 10.0f; // 俯仰角阈值
+    private static final float PITCH_THRESHOLD = 30; // Pitch angle threshold
 
 
-    // 位置精度相关
-    LocationManager locationManager; //位置管理对象
-    LocationListener locationListener; // 位置监听器
-    float locationAccuracy = -1; //　根据gps获取位置精度
-    float outdoorThreshold = 20.0f; //户外精度阈值
+    // Related to positional accuracy
+    LocationManager locationManager; //　Location management objects
+    LocationListener locationListener; // Position listeners
+    float locationAccuracy = -1; //　Get position accuracy based on GPS
+    float outdoorThreshold = 20.0f; //　Outdoor accuracy thresholds
 
-    private boolean isPhoneActive = false; // 用于判断用户是否在玩手机
+    private boolean isPhoneActive = false; // It is used to determine whether the user is playing with the phone
 
     @Override
     public void onCreate() {
@@ -173,49 +175,52 @@ public class WalkRemindService extends Service implements SensorEventListener {
 
     }
 
+    /**
+     * Judge the angle of the phone
+     */
     private void checkPhoneHold() {
         double pitch = Math.atan2(accelData[0], Math.sqrt(accelData[1] * accelData[1] + accelData[2] * accelData[2])) * (180 / Math.PI);
         double roll = Math.atan2(accelData[1], Math.sqrt(accelData[0] * accelData[0] + accelData[2] * accelData[2])) * (180 / Math.PI);
-        Log.d(TAG, "持有手机: " + Math.abs(pitch) + " : " + Math.abs(roll));
-        // 判断手机是否被持有
-        if (Math.abs(pitch) < limitStepCount && Math.abs(roll) < limitStepCount) {
-            isPhoneActive = true; // 可能在玩手机
+        Log.d(TAG, "Possess a mobile phone: " + Math.abs(pitch) + " : " + Math.abs(roll));
+        // Determine if the phone is in possession
+        if (Math.abs(pitch) < PITCH_THRESHOLD && Math.abs(roll) < PITCH_THRESHOLD) {
+            isPhoneActive = true; // Probably playing with a phone
         } else {
-            isPhoneActive = false; // 可能在玩手机
+            isPhoneActive = false; // Probably not playing on the phone
         }
     }
 
-    private void handleOrientation(float[] gravity, float[] geomagnetic) {
-        // 计算方向
-        float[] R = new float[9];
-        float[] I = new float[9];
-        if (SensorManager.getRotationMatrix(R, I, gravity, geomagnetic)) {
-            float[] orientation = new float[3];
-            SensorManager.getOrientation(R, orientation);
-            float pitch = (float) Math.toDegrees(orientation[1]); // 俯仰角
-            Log.d(TAG, "Math.abs(pitch): " + Math.abs(pitch));
-            // 判断设备是否在玩手机（如俯仰角接近水平）
-            if (Math.abs(pitch) > PITCH_THRESHOLD && Math.abs(pitch) < 60) {
-                isPhoneActive = true; // 可能在玩手机
-            } else {
-                isPhoneActive = false; // 可能不在玩手机
-                resetStepCount();
-            }
-        }
-    }
+    //private void handleOrientation(float[] gravity, float[] geomagnetic) {
+    //    // 计算方向
+    //    float[] R = new float[9];
+    //    float[] I = new float[9];
+    //    if (SensorManager.getRotationMatrix(R, I, gravity, geomagnetic)) {
+    //        float[] orientation = new float[3];
+    //        SensorManager.getOrientation(R, orientation);
+    //        float pitch = (float) Math.toDegrees(orientation[1]); // 俯仰角
+    //        Log.d(TAG, "Math.abs(pitch): " + Math.abs(pitch));
+    //        // 判断设备是否在玩手机（如俯仰角接近水平）
+    //        if (Math.abs(pitch) > PITCH_THRESHOLD && Math.abs(pitch) < 60) {
+    //            isPhoneActive = true; // 可能在玩手机
+    //        } else {
+    //            isPhoneActive = false; // 可能不在玩手机
+    //            resetStepCount();
+    //        }
+    //    }
+    //}
 
     /**
-     * 计算步数到达限定步数弹出通知
+     * A pop-up notification pops up when the number of steps is counted
      */
     private void handleStepDetection() {
         if (isDeviceUnlocked() && isPhoneActive) {
             //　计算步数
             stepCount++;
         }
-        Log.d(TAG, "isWifiConnected: " + isWifiConnected() + " isDeviceUnlocked: " + isDeviceUnlocked() + " isPhoneActive: " + isPhoneActive + " allStepCount: " + stepCount);
+        Log.d(TAG,  " isDeviceUnlocked: " + isDeviceUnlocked() + " isPhoneActive: " + isPhoneActive + " allStepCount: " + stepCount);
         // 当步数达到 limitStepCount 时，弹出提示并清零
         if (stepCount >= limitStepCount) {
-            showNotification("请不要走路玩手机");
+            showNotification(getResources().getString(R.string.tips_value));
             resetStepCount(); // 清零步数
         }
         // 重置定时器
@@ -229,7 +234,7 @@ public class WalkRemindService extends Service implements SensorEventListener {
 
 
     /**
-     * 创建通知渠道
+     * Create a notification channel
      */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -244,7 +249,7 @@ public class WalkRemindService extends Service implements SensorEventListener {
     }
 
     /**
-     * 显示通知
+     * Notifications are displayed
      *
      * @param message
      */
@@ -252,7 +257,8 @@ public class WalkRemindService extends Service implements SensorEventListener {
         createNotificationChannel();
         Notification notification = new Notification.Builder(this, "detox_notification_channel")
                 .setSmallIcon(com.ihuatek.walktips.R.drawable.detox_logo) // Set your notification icon here
-                .setContentTitle("警告")
+                .setContentTitle(getResources().getString(R.string.tips_title))
+                .setContentText(getResources().getString(R.string.tips_value))
                 .setContentText(message)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
@@ -260,24 +266,10 @@ public class WalkRemindService extends Service implements SensorEventListener {
         notificationManager.notify(0, notification);
     }
 
-    /**
-     * 判断是否链接wifi
-     *
-     * @return true or false (连接/不连接)
-     */
-    private boolean isWifiConnected() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-            return capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
-        } else {
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-            return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected();
-        }
-    }
+
 
     /**
-     * 判断手机是否解锁屏幕
+     * Tell if your phone is unlocked or not
      *
      * @return
      */
@@ -291,7 +283,7 @@ public class WalkRemindService extends Service implements SensorEventListener {
     }
 
     /**
-     * 获取数量
+     * Get the step count
      *
      * @return
      */
@@ -301,7 +293,7 @@ public class WalkRemindService extends Service implements SensorEventListener {
 
 
     /**
-     * 　注册位置改变监听器获取位置信息
+     * 　Register a listener to change the location and obtain the location information
      */
     @SuppressLint("MissingPermission")
     public void startLocationUpdates() {
@@ -311,7 +303,7 @@ public class WalkRemindService extends Service implements SensorEventListener {
     }
 
     /**
-     * 移除位置监听
+     * Remove location listeners
      */
     public void removeLocationListener() {
         locationManager.removeUpdates(locationListener);
